@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:dermaapp/services/database.dart';
+import 'package:dermaapp/pages/start/splash_screen.dart';
+import 'package:dermaapp/pages/start/register.dart';
+import 'package:dermaapp/pages/start/login.dart';
+import 'package:dermaapp/pages/home/home.dart';
+import 'package:dermaapp/pages/home/card_detail.dart';
+import 'package:dermaapp/pages/home/recommendation.dart';
+import 'package:dermaapp/pages/analysis/scan_condition.dart';
+import 'package:dermaapp/pages/products/product_home.dart';
+import 'package:dermaapp/pages/products/scan_product.dart';
 
 void main() {
-  // Ambil variabel lingkungan dari GitHub Actions atau platform lain
   final dbService = DatabaseService(
     host: const String.fromEnvironment('DB_HOST'),
     port: int.parse(
@@ -23,56 +31,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeScreen(dbService: dbService));
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  final DatabaseService dbService;
-
-  const HomeScreen({required this.dbService, super.key});
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    widget.dbService.connect();
-  }
-
-  @override
-  void dispose() {
-    widget.dbService.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Neon PostgreSQL with Flutter')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                await widget.dbService.addUser('John Doe', 'john@example.com');
-              },
-              child: const Text('Add User'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                var users = await widget.dbService.getUsers();
-                print(users);
-              },
-              child: const Text('Get Users'),
-            ),
-          ],
-        ),
-      ),
+    return MaterialApp(
+      home: const SplashScreen(),
+      routes: {
+        '/register': (context) => const Register(),
+        '/login': (context) => const Login(),
+        '/home': (context) => const Home(),
+        '/card_detail': (context) => const CardDetail(),
+        '/recommendation': (context) => const Recommendation(),
+        '/scan_condition': (context) => const ScanCondition(),
+        '/scan_product': (context) => const ScanProduct(),
+        '/product_home': (context) => const ProductHome(),
+      },
     );
   }
 }
